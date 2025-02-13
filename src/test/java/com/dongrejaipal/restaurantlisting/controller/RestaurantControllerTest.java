@@ -33,7 +33,7 @@ public class RestaurantControllerTest {
 	}
 
 	@Test
-	public void testFetchAllRestaurant() {
+	public void testFetchAllRestaurants() {
 		// mock the service behaviour
 		List<RestaurantDTO> mockRestaurants = Arrays.asList(
 				new RestaurantDTO(1, "Paradise", "begumpet", "Hyderabad", "birayani restaurant"),
@@ -70,6 +70,29 @@ public class RestaurantControllerTest {
 		// call the service only once
 		verify(restaurantService, times(1)).addRestaurantInDB(mockRestaurant);
 
+	}
+
+	@Test
+	void testFindRestaurantById() {
+		// Create a mock restaurant ID
+		Integer mockRestaurantId = 1;
+
+		// Create a mock restaurant to be returned by the service
+		RestaurantDTO mockRestaurant = new RestaurantDTO(1, "Restaurant 1", "Address 1", "city 1", "Desc 1");
+
+		// Mock the service behavior
+		when(restaurantService.findRestaurantById(mockRestaurantId))
+				.thenReturn(new ResponseEntity<>(mockRestaurant, HttpStatus.OK));
+
+		// Call the controller method
+		ResponseEntity<RestaurantDTO> response = restController.findRestaurantById(mockRestaurantId);
+
+		// Verify the response
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(mockRestaurant, response.getBody());
+
+		// Verify that the service method was called
+		verify(restaurantService, times(1)).findRestaurantById(mockRestaurantId);
 	}
 
 }
